@@ -4,6 +4,7 @@ LABEL maintainer="metowolf <i@i-meto.com>"
 
 ARG PHP_VERSION=7.4.7
 ARG COMPOSER_VERSION=1.10.7
+ARG XDEBUG_VERSION=2.9.6
 
 ENV PHP_INI_DIR /usr/local/etc/php
 
@@ -277,6 +278,11 @@ RUN apk add --no-cache \
   && docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) tidy \
   && (rm -rf /usr/local/lib/php/test/tidy || true) \
   && (rm -rf /usr/local/lib/php/doc/tidy || true)
+
+# xdebug
+RUN wget -O /tmp/xdebug.tgz https://xdebug.org/files/xdebug-${XDEBUG_VERSION}.tgz\
+  && pecl install /tmp/xdebug.tgz \
+  && docker-php-ext-enable xdebug 
 
 # xmlrpc
 RUN docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) xmlrpc \
